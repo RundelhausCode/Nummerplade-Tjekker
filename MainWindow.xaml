@@ -5,8 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Nummerplade_Tjekker"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="300">
     <Grid>
+        <ScrollViewer VerticalScrollBarVisibility="Visible">
+            <StackPanel x:Name="SPCon">
+                
+            </StackPanel>
+
+        </ScrollViewer>
+
 
     </Grid>
 </Window>
