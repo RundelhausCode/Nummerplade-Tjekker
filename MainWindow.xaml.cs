@@ -29,42 +29,46 @@ namespace Nummerplade_Tjekker
         public MainWindow()
         {
             InitializeComponent();
-            var search = new SearchWindow();
-            bool? dialogResult = search.ShowDialog();
-            switch (dialogResult)
-            {
-                case true:
-
-                    break;
-                case false:
-                case null:
-                default:
-                    Application.Current.Shutdown();
-                    break;
-            }
-            if(search.reg == string.Empty)
-            {
-                SetList(search.vin);
-            }
-            else
-            {
-                SetList(search.reg);
-            }
+            OpenSearch();
             
 
         }
-      
-        private async void SetList(string url)
+        private async void OpenSearch(bool searchFailde = false)
         {
+            
             var car = new Car();
+            car = null;
+            var search = new SearchWindow();
+            bool? dialogResult = search.ShowDialog();
+            while (car == null)
+            {
+                if (dialogResult != true) Environment.Exit(1);
+                car = await APICall("https://v1.motorapi.dk/vehicles/" + search.vin);
+                if (car != null) break;
+                var search2 = new SearchWindow();
+                search2.errolabel.Visibility = Visibility.Visible;
+                dialogResult = search2.ShowDialog();
+                
+                
+                
+            }
+            SetList(car);
+
+        }
+
+        private void SetList(Car car)
+        {
+            SPCon.Children.Clear();
+
             string an = "Nej";
-            car = await APICall("https://v1.motorapi.dk/vehicles/"+url);
+
+
             if (car.coupling)
             {
                 an = "Ja";
-            }            
+            }
 
-            
+
             MakeTB(new List<string>
             {
                 {"registreringsnummer: " + car.registration_number},
@@ -122,7 +126,7 @@ namespace Nummerplade_Tjekker
                 RequestUri = new Uri(U),
                 Headers = {
                     { HttpRequestHeader.Accept.ToString(), "application/json" },
-                    {"X-AUTH-TOKEN","tc60ppf002nch9lbkxza56m7mpm46s13"}
+                    {"X-AUTH-TOKEN","6ypq1yqvw3ccmz1c8a0g4p5w8aacztrb"}
                 }
             };
             //client.BaseAddress = new Uri(URL);
@@ -135,6 +139,7 @@ namespace Nummerplade_Tjekker
             {
                 car = await response.Content.ReadAsAsync<Car>();
             }
+
             return car;
             //datagrid.ItemsSource = await client.GetAsync
         }

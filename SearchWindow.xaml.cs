@@ -17,35 +17,49 @@ namespace Nummerplade_Tjekker
     /// </summary>
     public partial class SearchWindow : Window
     {
-        public string reg = string.Empty;
-        public string vin = string.Empty;
+        public string vin;
         public SearchWindow()
         {
             InitializeComponent();
-        }
+            vin = string.Empty;
+    }
 
         private void Regbutton_Click(object sender, RoutedEventArgs e)
-        {
-            RegControl();
+        { 
+            vin = Regbox.Text;
             DialogResult = true;
         }
 
         private void Vinbutton_Click(object sender, RoutedEventArgs e)
         {
-            VinControl();
+            
+            vin = Vinbox.Text;
             DialogResult = true;
         }
-        private bool RegControl()
+
+        private void Regbox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            reg = Regbox.Text;
-            return true;
-        }
-        private bool VinControl()
-        {
-            vin = Vinbox.Text;
-            return true;
+            if(Regbox.Text.Length <= 7)
+            {
+                Regbutton.IsEnabled = true;
+            }
+            else
+            {
+                Regbutton.IsEnabled = false;
+            }
         }
 
-
+        private void Vinbox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (Vinbox.Text.Length == 17)
+            {
+                Vinbutton.IsEnabled = true;
+            }
+            else
+            {
+                Vinbutton.IsEnabled = false;
+            }
+            
+        }
     }
 }
